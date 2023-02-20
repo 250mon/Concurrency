@@ -13,9 +13,17 @@ Using await on our tasks in our application
 also has implications for how exceptions are handled.
 '''
 async def main():
+    # await
     sleep_for_three = asyncio.create_task(delay(3))
     print(type(sleep_for_three))
     result = await sleep_for_three
     print(result)
+
+    # no await
+    sleep_for_another_three = asyncio.create_task(delay(3))
+    print(type(sleep_for_another_three))
+
+    # result = await sleep_for_three
+    # print(result)
 
 asyncio.run(main())
