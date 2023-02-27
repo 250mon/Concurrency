@@ -5,6 +5,13 @@ import platform
 from ch04_fetch_status import fetch_status
 
 
+'''
+wait
+this method returns two sets: a set of tasks that are finished with either
+a result or an exception, and a set of tasks that are still running.
+This function also allows us to specify a timeout that behaves differently 
+from how other API methods operate; it does not throw exceptions.
+'''
 @async_timed()
 async def main():
     async with aiohttp.ClientSession() as session:
