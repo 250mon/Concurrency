@@ -17,7 +17,8 @@ if not os.path.exists(file_path):
 async def reduce(loop, pool, counters, chunk_size) -> Dict[str, int]:
     chunks: List[List[Dict]] = list(partition(counters, chunk_size))
     reducers = []
-    while len(chunks[0]) >1:
+    # while len(chunks[0]) > 1:
+    while len(chunks[0]) > 1:
         for chunk in chunks:
             reducer = functools.partial(functools.reduce,
                                         merge_dictionaries,
@@ -37,9 +38,8 @@ async def main(partition_size: int):
         with concurrent.futures.ProcessPoolExecutor() as pool:
             for chunk in partition(contents, partition_size):
                 # for each partition, run our map operation in a separate process
-                tasks.append(loop.run_in_executor(pool,
-                                                  functools.partial(map_frequencies,
-                                                                    chunk)))
+                counter_func = functools.partial(map_frequencies, chunk)
+                tasks.append(loop.run_in_executor(pool, counter_func))
             # wait for all map operation to complete
             intermediate_results = await asyncio.gather(*tasks)
             # parallel reduce all our intermediate map results into a result
