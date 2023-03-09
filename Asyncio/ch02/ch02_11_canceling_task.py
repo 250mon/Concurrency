@@ -22,12 +22,16 @@ async def main():
 
     while not long_task.done():
         print('Task not finished, checking again in a second.')
+        print(f'Before await: long_task.done?? {long_task.done()}')
+        # In this while loop, the following 'await' is the first
+        # 'await' which canceling a task gets to meet.
         await asyncio.sleep(1)
-        print(f'long_task.done?? {long_task.done()}')
+        print(f'After await: long_task.done?? {long_task.done()}')
         seconds_elapsed = seconds_elapsed + 1
         if seconds_elapsed == 2:
             print("Canceling the long task ...")
             long_task.cancel()
+        print("=========================================================")
 
     try:
         await long_task

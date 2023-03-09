@@ -12,7 +12,7 @@ async def echo(connection: socket,
         while data := await loop.sock_recv(connection, 1024)
             print('got data!')
             if data == b'boom\r\n':
-                raise Exception("Unexpected netowrk error")
+                raise Exception("Unexpected network error")
             await loop.sock_sendall(connection, data)
     except Exception as ex:
         logging.exception(ex)
@@ -52,7 +52,6 @@ async def main():
     server_socket.setblocking(False)
     server_socket.bind(server_address)
     server_socket.listen()
-
 
     for signame in {'SIGINT', 'SIGTERM'}:
         loop.add_signal_handler(getattr(signal, signame), shutdown)
