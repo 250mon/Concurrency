@@ -4,9 +4,7 @@ import functools
 import time
 import os
 from typing import Dict, List
-from ch06_08_count_words_freq_parallel import (
-    partition, merge_dictionaries, map_frequencies
-)
+from ch06_utils import partition, merge_dictionaries, map_frequencies
 
 
 file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')

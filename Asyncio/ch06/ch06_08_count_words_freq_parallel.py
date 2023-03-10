@@ -6,7 +6,8 @@ import os
 from typing import Dict, List
 
 
-file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
+# file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
+file_path = os.path.join('D:/Datasets/Concurrency', 'googlebooks-eng-all-1gram-20120701-a')
 if not os.path.exists(file_path):
     print('File not found')
     exit(0)
