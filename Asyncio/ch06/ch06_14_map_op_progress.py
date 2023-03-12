@@ -4,11 +4,10 @@ import asyncio
 from multiprocessing import Value
 import os
 from typing import List, Dict
-from ch06_08_count_words_freq_parallel import (
-    partition, merge_dictionaries
-)
+from ch06_utils import partition, merge_dictionaries
 
-file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
+# file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
+file_path = os.path.join('D:/Datasets/Concurrency', 'googlebooks-eng-all-1gram-20120701-a')
 if not os.path.exists(file_path):
     print('File not found')
     exit(0)
