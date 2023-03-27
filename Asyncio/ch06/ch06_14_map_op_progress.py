@@ -14,9 +14,11 @@ if not os.path.exists(file_path):
 
 map_progress: Value
 
+
 def init(progress: Value):
     global map_progress
     map_progress = progress
+
 
 def map_frequencies(chunk: List[str]) -> Dict[str, int]:
     counter = {}
@@ -29,10 +31,12 @@ def map_frequencies(chunk: List[str]) -> Dict[str, int]:
 
     return counter
 
+
 async def progress_reporter(total_partition: int):
     while map_progress.value < total_partition:
         print(f'Finished {map_progress.value} / {total_partition} map operations')
         await asyncio.sleep(1)
+
 
 async def main(partition_size: int):
     global map_progress

@@ -1,6 +1,5 @@
-import asyncpg
 import asyncio
-from ch05_util import get_options
+from ch05_util import connect_pg
 from ch05_product_schema import (
     CREATE_BRAND_TABLE,
     CREATE_PRODUCT_TABLE,
@@ -13,14 +12,7 @@ from ch05_product_schema import (
 
 
 async def main():
-    options = get_options("db_settings")
-    passwd = options['password']
-    connection = await asyncpg.connect(host='127.0.0.1',
-                                       port=5432,
-                                       user='postgres',
-                                       database='postgres',
-                                       password=passwd)
-
+    connection = await connect_pg()
     statements = [CREATE_BRAND_TABLE,
                   CREATE_PRODUCT_TABLE,
                   CREATE_PRODUCT_COLOR_TABLE,
