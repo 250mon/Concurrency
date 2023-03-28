@@ -15,7 +15,7 @@ def generate_brand_names(words: List[str]) -> List[Tuple[Union[str,]]]:
 
 async def insert_brands(common_words, connection) -> int:
     brands = generate_brand_names(common_words)
-    insert_brands = "INSERT INTO brand VALUES(DEFAULT, $1"
+    insert_brands = "INSERT INTO brand VALUES(DEFAULT, $1)"
     return await connection.executemany(insert_brands, brands)
 
 
