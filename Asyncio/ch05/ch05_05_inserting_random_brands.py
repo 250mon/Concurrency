@@ -6,10 +6,10 @@ from random import sample
 
 def load_common_words() -> List[str]:
     with open('common_words.txt') as common_words:
-        return common_words.readlines()
+        return [word.strip() for word in common_words.readlines()]
 
 
-def generate_brand_names(words: List[str]) -> List[Tuple[Union[str,]]]:
+def generate_brand_names(words: List[str]) -> List[Tuple[str,]]:
     return [(words[index],) for index in sample(range(100), 100)]
 
 
