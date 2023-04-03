@@ -1,5 +1,4 @@
 import asyncio
-import asyncpg
 from random import randint, sample
 from typing import List, Tuple
 from ch05_util import connect_pg
