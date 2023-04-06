@@ -25,3 +25,4 @@ async def connect_pg():
                                        database='postgres',
                                        password=passwd)
     return connection
+

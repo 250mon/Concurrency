@@ -24,7 +24,7 @@ def gen_skus(product_id_start: int,
         product_id = randint(product_id_start, product_id_end)
         size_id = randint(1, 3)
         color_id = randint(1, 2)
-        skus.appned((product_id, size_id, color_id))
+        skus.append((product_id, size_id, color_id))
     return skus
 
 async def main():
