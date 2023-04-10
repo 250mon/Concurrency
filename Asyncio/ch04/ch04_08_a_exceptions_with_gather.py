@@ -22,7 +22,7 @@ async def main1():
 
 
 '''
-return_exceptions=False
+return_exceptions=True
 gather will return any exceptions as part of the result list it returns
 when we await it. The call to gather will not throw any exceptions itself,
 and we’ll be able handle all exceptions as we wish.

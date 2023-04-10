@@ -24,13 +24,13 @@ async def main():
             call_coros.append(loop.run_in_executor(process_pool, call))
 
         # results will have a list of string values
-        results = await asyncio.gather(*call_coros)
-        for result in results:
-            print(result)
+        # results = await asyncio.gather(*call_coros)
+        # for result in results:
+        #     print(result)
 
         # an iterator of futures is returned
-        # for finished_task in  asyncio.as_completed(call_coros):
-        #     print(await finished_task)
+        for finished_task in asyncio.as_completed(call_coros):
+            print(await finished_task)
 
 
 
