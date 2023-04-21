@@ -44,8 +44,8 @@ async def main2():
 
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-print('###### return_exceptions = False')
+print('###### return_exceptions = True')
 asyncio.run(main2())
 print('\n\n\n')
-print('###### return_exceptions = True')
+print('###### return_exceptions = False')
 asyncio.run(main1())
