@@ -57,7 +57,7 @@ async def main():
     loop = asyncio.get_running_loop()
     pool = ProcessPoolExecutor()
     # Create five processes
-    tasks = [loop.run_in_executor(pool, run_in_new_loop, 1000) for _ in range(5)]
+    tasks = [loop.run_in_executor(pool, run_in_new_loop, 1) for _ in range(5)]
     # Wait for all query results to complete
     all_results = await asyncio.gather(*tasks)
     total_queries = sum([len(result) for result in all_results])

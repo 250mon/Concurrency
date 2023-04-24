@@ -44,7 +44,8 @@ async def main():
                                    database='postgres',
                                    min_size=6,
                                    max_size=6) as pool:
-        await query_products_synchronously(pool, 10000)
-        await query_products_concurrently(pool, 10000)
+        result = await query_products_synchronously(pool, 1)
+        print(result)
+        # await query_products_concurrently(pool, 10000)
 
 asyncio.run(main())
