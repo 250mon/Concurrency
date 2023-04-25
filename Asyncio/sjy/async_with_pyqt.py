@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QPushButton,
     QLineEdit,
-    QTableWidget
+    QTableWidget,
+    QTableWidgetItem
 )
 import qasync
 from qasync import asyncSlot, asyncClose, QApplication
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         self.name_input = QLineEdit()
         self.submit_button = QPushButton("Submit")
         self.result_label = QLabel()
+        self.result_table = QTableWidget()
 
         # Create layouts
         input_layout = QHBoxLayout()
@@ -43,11 +45,13 @@ class MainWindow(QMainWindow):
         main_layout.addLayout(input_layout)
         main_layout.addLayout(button_layout)
         main_layout.addWidget(self.result_label)
+        main_layout.addWidget(self.result_table)
 
         # Set layout
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
+        self.setGeometry(20, 20, 1000, 500)
 
         # Connect signals
         self.submit_button.clicked.connect(self.submit_name)
@@ -71,10 +75,12 @@ class MainWindow(QMainWindow):
         # Display result
         if row_count := len(result) == 0:
             self.result_label.setText("No result found.")
+            self.result_table.clear()
         else:
+            self.result_label.setText(f"{len(result)} records found.")
             self.show_in_qtable(result)
             # for record in result:
-                # print(record['sku_id'])
+            #     print(record['sku_id'])
                 # self.result_label.setText(str(result))
 
         # Close database connection
@@ -83,16 +89,21 @@ class MainWindow(QMainWindow):
     def show_in_qtable(self, records):
         row_count = len(records)
         col_count = len(records[0])
-        table = QTableWidget(row_count, col_count)
+        self.result_table.setRowCount(row_count)
+        self.result_table.setColumnCount(col_count)
 
         headers = list(records[0].keys())
-        table.setHorizontalHeaderLabels(headers)
-        def record_to_row(table, row_num, record):
-            setItemCol = functools.partial(table.setItem, row_num)
-            map(setItemCol, zip(range(col_count), record.values()))
-        record_to_table_row = functools.partial(record_to_row, table)
-        [map(record_to_table_row, zip(range(row_count), records))]
+        self.result_table.setHorizontalHeaderLabels(headers)
 
+        for row_num in range(row_count):
+            for col_num, val in zip(range(col_count), records[row_num].values()):
+                self.result_table.setItem(row_num, col_num, QTableWidgetItem(str(val)))
+
+        # def record_to_row(row_num, record):
+        #     for c, val in zip(range(col_count), record.values()):
+        #         self.result_table.setItem(row_num, c, QTableWidgetItem(str(val)))
+        #
+        # list(map(record_to_row, range(row_count), records))
 
 
 async def main():
