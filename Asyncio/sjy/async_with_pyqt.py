@@ -1,13 +1,26 @@
 import asyncio
+import sys
+import functools
+
 import asyncpg
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit
-from ch05.ch05_util import connect_pg
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QWidget,
+    QLabel,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLineEdit,
+    QTableWidget
+)
+import qasync
+from qasync import asyncSlot, asyncClose, QApplication
+from util import connect_pg
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, loop):
+    def __init__(self):
         super().__init__()
-        self.loop = loop
         self.db_conn = None
         self.init_ui()
 
@@ -39,10 +52,12 @@ class MainWindow(QMainWindow):
         # Connect signals
         self.submit_button.clicked.connect(self.submit_name)
 
+    @asyncSlot()
     async def connect_to_database(self):
         # self.db_conn = await asyncpg.connect(user='user', password='password', database='database', host='localhost')
         self.db_conn = await connect_pg()
 
+    @ asyncSlot()
     async def submit_name(self):
         color_name = self.name_input.text()
 
@@ -50,22 +65,59 @@ class MainWindow(QMainWindow):
         await self.connect_to_database()
 
         # Execute query
-        query = f"SELECT * FROM table WHERE product_color='{color_name}'"
+        query = f"SELECT * FROM sku WHERE product_color_id='{color_name}'"
         result = await self.db_conn.fetch(query)
 
         # Display result
-        if len(result) == 0:
+        if row_count := len(result) == 0:
             self.result_label.setText("No result found.")
         else:
-            self.result_label.setText(str(result))
+            self.show_in_qtable(result)
+            # for record in result:
+                # print(record['sku_id'])
+                # self.result_label.setText(str(result))
 
         # Close database connection
         await self.db_conn.close()
 
+    def show_in_qtable(self, records):
+        row_count = len(records)
+        col_count = len(records[0])
+        table = QTableWidget(row_count, col_count)
+
+        headers = list(records[0].keys())
+        table.setHorizontalHeaderLabels(headers)
+        def record_to_row(table, row_num, record):
+            setItemCol = functools.partial(table.setItem, row_num)
+            map(setItemCol, zip(range(col_count), record.values()))
+        record_to_table_row = functools.partial(record_to_row, table)
+        [map(record_to_table_row, zip(range(row_count), records))]
+
+
+
+async def main():
+    def close_future(future, loop):
+        loop.call_later(10, future.cancel)
+        future.cancel()
+
+    loop = asyncio.get_event_loop()
+    future = asyncio.Future()
+
+    app = QApplication.instance()
+    if hasattr(app, "aboutToQuit"):
+        getattr(app, "aboutToQuit").connect(
+            functools.partial(close_future, future, loop)
+        )
+
+    mainWindow = MainWindow()
+    mainWindow.show()
+
+    await future
+    return True
+
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    app = QApplication([])
-    main_window = MainWindow(loop)
-    main_window.show()
-    app.exec_()
+    try:
+        qasync.run(main())
+    except asyncio.exceptions.CancelledError:
+        sys.exit(0)
