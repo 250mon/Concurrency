@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
     QTableWidget,
     QTableWidgetItem
 )
+from PyQt5.QtCore import Qt
 import qasync
 from qasync import asyncSlot, asyncClose, QApplication
 from util import connect_pg
