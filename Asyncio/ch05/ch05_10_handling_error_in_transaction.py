@@ -2,7 +2,12 @@ import asyncio
 from ch05_util import connect_pg
 import logging
 
-
+"""
+transaction consists of one or more SQL statements that are
+executed as one atomic unit. (ACID)
+if no error, it commits the statements to the DB.
+if any error, it rolls back the statements
+"""
 async def main():
     connection = await connect_pg()
     try:
