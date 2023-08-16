@@ -2,8 +2,18 @@ import asyncio
 from util import delay
 
 '''
+'await'
+This keyword causes the coroutine following it to be run,
+unlike calling a coroutine directly, which produces a coroutine
+obj.
+
+The await expression will also pause the coroutine where it
+is contained in until the coroutine we awaited finishes and
+returns a result
+---
+
 It is important to know that we should usually use an
-await keyword on our tasks at some point in our application.
+'await' keyword on our tasks at some point in our application.
 
 if we did not use await, our task would be scheduled to run, 
 but it would almost immediately be stopped and cleaned when
