@@ -1,5 +1,6 @@
 import asyncio
-from ch05_util import connect_pg
+
+from util.db_handler import connect_pg
 
 
 async def main():
@@ -11,4 +12,6 @@ async def main():
 
     await connection.close()
 
+
 asyncio.run(main())
+

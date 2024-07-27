@@ -1,8 +1,9 @@
 import asyncio
 from asyncio import CancelledError
-from util import delay
 
-'''
+from util.delay_functions import delay
+
+"""
 Something important to note about cancellation is that a
 CancelledError can only be thrown from an await statement.
 
@@ -15,18 +16,20 @@ Calling cancel won't magically stop the task in its tracks;
 it will only stop the task if you're currently at an await point
 or its next await point.
 
-'''
+"""
+
+
 async def main():
     long_task = asyncio.create_task(delay(5))
     seconds_elapsed = 0
 
     while not long_task.done():
-        print('Task not finished, checking again in a second.')
-        print(f'Before await: long_task.done?? {long_task.done()}')
+        print("Task not finished, checking again in a second.")
+        print(f"Before await: long_task.done?? {long_task.done()}")
         # In this while loop, the following 'await' is the first
         # 'await' which canceling a task gets to meet.
         await asyncio.sleep(1)
-        print(f'After await: long_task.done?? {long_task.done()}')
+        print(f"After await: long_task.done?? {long_task.done()}")
         seconds_elapsed = seconds_elapsed + 1
         if seconds_elapsed == 2:
             print("Canceling the long task ...")
@@ -36,6 +39,8 @@ async def main():
     try:
         await long_task
     except CancelledError:
-        print('Our task was cancelled')
+        print("Our task was cancelled")
+
 
 asyncio.run(main())
+

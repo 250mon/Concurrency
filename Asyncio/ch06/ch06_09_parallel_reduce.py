@@ -1,16 +1,17 @@
 import asyncio
 import concurrent.futures
 import functools
-import time
 import os
+import time
 from typing import Dict, List
-from ch06_utils import partition, merge_dictionaries, map_frequencies
 
+from util.ch06_utils import map_frequencies, merge_dictionaries, partition
 
-file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
+file_path = os.path.join("E:/Datasets", "googlebooks-eng-all-1gram-20120701-a")
 if not os.path.exists(file_path):
-    print('File not found')
+    print("File not found")
     exit(0)
+
 
 async def reduce(loop, pool, counters, chunk_size) -> Dict[str, int]:
     chunks: List[List[Dict]] = list(partition(counters, chunk_size))
@@ -18,17 +19,16 @@ async def reduce(loop, pool, counters, chunk_size) -> Dict[str, int]:
     # while len(chunks[0]) > 1:
     while len(chunks[0]) > 1:
         for chunk in chunks:
-            reducer = functools.partial(functools.reduce,
-                                        merge_dictionaries,
-                                        chunk)
+            reducer = functools.partial(functools.reduce, merge_dictionaries, chunk)
             reducers.append(loop.run_in_executor(pool, reducer))
         reducer_chunks = await asyncio.gather(*reducers)
         chunks = list(partition(reducer_chunks, chunk_size))
         reducers.clear()
     return chunks[0][0]
 
+
 async def main(partition_size: int):
-    with open(file_path, encoding='utf-8') as f:
+    with open(file_path, encoding="utf-8") as f:
         contents = f.readlines()
         loop = asyncio.get_running_loop()
         tasks = []
@@ -46,8 +46,8 @@ async def main(partition_size: int):
             print(f"Aardvark has appeared {final_result['Aardvark']} times.")
 
             end = time.time()
-            print(f'MapReduce took: {(end - start):.4f} seconds')
+            print(f"MapReduce took: {(end - start):.4f} seconds")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main(partition_size=60000))

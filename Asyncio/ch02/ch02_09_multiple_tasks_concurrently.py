@@ -1,5 +1,6 @@
 import asyncio
-from util import delay
+
+from util.delay_functions import delay
 
 
 async def main():
@@ -10,4 +11,6 @@ async def main():
     await sleep_again
     await sleep_once_more
 
+
 asyncio.run(main())
+

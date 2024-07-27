@@ -1,15 +1,18 @@
-from concurrent.futures import ProcessPoolExecutor
-import functools
 import asyncio
-from multiprocessing import Value
+import functools
 import os
-from typing import List, Dict
-from ch06_utils import partition, merge_dictionaries
+from concurrent.futures import ProcessPoolExecutor
+from multiprocessing import Value
+from typing import Dict, List
+
+from util.ch06_utils import merge_dictionaries, partition
 
 # file_path = os.path.join('E:/Datasets', 'googlebooks-eng-all-1gram-20120701-a')
-file_path = os.path.join('D:/Datasets/Concurrency', 'googlebooks-eng-all-1gram-20120701-a')
+file_path = os.path.join(
+    "D:/Datasets/Concurrency", "googlebooks-eng-all-1gram-20120701-a"
+)
 if not os.path.exists(file_path):
-    print('File not found')
+    print("File not found")
     exit(0)
 
 map_progress: Value
@@ -23,7 +26,7 @@ def init(progress: Value):
 def map_frequencies(chunk: List[str]) -> Dict[str, int]:
     counter = {}
     for line in chunk:
-        word, _, count, _ = line.split('\t')
+        word, _, count, _ = line.split("\t")
         counter[word] = counter.setdefault(word, 0) + int(count)
 
     with map_progress.get_lock():
@@ -34,21 +37,20 @@ def map_frequencies(chunk: List[str]) -> Dict[str, int]:
 
 async def progress_reporter(total_partition: int):
     while map_progress.value < total_partition:
-        print(f'Finished {map_progress.value} / {total_partition} map operations')
+        print(f"Finished {map_progress.value} / {total_partition} map operations")
         await asyncio.sleep(1)
 
 
 async def main(partition_size: int):
     global map_progress
 
-    with open(file_path, encoding='utf-8') as f:
+    with open(file_path, encoding="utf-8") as f:
         contents = f.readlines()
         loop = asyncio.get_running_loop()
         tasks = []
-        map_progress = Value('i', 0)
+        map_progress = Value("i", 0)
 
-        with ProcessPoolExecutor(initializer=init,
-                                 initargs=(map_progress,)) as pool:
+        with ProcessPoolExecutor(initializer=init, initargs=(map_progress,)) as pool:
             total_partitions = len(contents) // partition_size
             reporter = asyncio.create_task(progress_reporter(total_partitions))
             for chunk in partition(contents, partition_size):
@@ -62,5 +64,5 @@ async def main(partition_size: int):
             print(f"Aardvark has appeared {final_result['Aardvark']} times.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main(partition_size=60000))

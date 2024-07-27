@@ -1,10 +1,10 @@
 import asyncio
-import aiohttp
-from aiohttp import ClientSession
-from util import async_timed
 import platform
-from ch04_fetch_status import fetch_status
 
+import aiohttp
+
+from ch04.ch04_fetch_status import fetch_status
+from util.async_timer import async_timed
 
 """
 asyncio.gather()
@@ -22,14 +22,17 @@ The first, which was already mentioned, is that it isn’t easy to cancel our ta
 The second is that we must wait for all our coroutines to finish before we can process our results.
 
 """
+
+
 @async_timed()
 async def main():
     async with aiohttp.ClientSession() as session:
-        urls = ['https://example.com' for _ in range(1000)]
+        urls = ["https://example.com" for _ in range(1000)]
         requests = [fetch_status(session, url) for url in urls]
         status_codes = await asyncio.gather(*requests)
         print(status_codes)
 
-if platform.system() == 'Windows':
+
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 asyncio.run(main())

@@ -1,13 +1,13 @@
 import asyncio
-import asyncpg
-from util import async_timed
-from ch05.ch05_util import get_options
-from typing import List, Dict
 from concurrent.futures.process import ProcessPoolExecutor
+from typing import Dict, List
 
+import asyncpg
+from util.async_timer import async_timed
 
-product_query = \
-    """
+from ..ch05.ch05_util import get_options
+
+product_query = """
     SELECT
         p.product_id,
         p.product_name,
@@ -21,6 +21,7 @@ product_query = \
     JOIN product_size as ps on ps.product_size_id = s.product_size_id
     WHERE p.product_id = 100
     """
+
 
 async def query_product(pool):
     async with pool.acquire() as connection:
@@ -36,21 +37,24 @@ async def query_products_concurrently(pool, queries):
 def run_in_new_loop(num_queries: int) -> List[Dict]:
     async def run_queries():
         options = get_options("db_settings")
-        host_addr = options['host_addr']
-        port_num = int(options['port_num'])
-        passwd = options['password']
-        async with asyncpg.create_pool(host=host_addr,
-                                       port=port_num,
-                                       user='postgres',
-                                       password=passwd,
-                                       database='postgres',
-                                       min_size=6,
-                                       max_size=6) as pool:
+        host_addr = options["host_addr"]
+        port_num = int(options["port_num"])
+        passwd = options["password"]
+        async with asyncpg.create_pool(
+            host=host_addr,
+            port=port_num,
+            user="postgres",
+            password=passwd,
+            database="postgres",
+            min_size=6,
+            max_size=6,
+        ) as pool:
             return await query_products_concurrently(pool, num_queries)
 
     # Run queries in a new event loop, and convert them to dictionaries
     results = [dict(result) for result in asyncio.run(run_queries())]
     return results
+
 
 @async_timed()
 async def main():
@@ -61,8 +65,9 @@ async def main():
     # Wait for all query results to complete
     all_results = await asyncio.gather(*tasks)
     total_queries = sum([len(result) for result in all_results])
-    print(f'Retrieved {total_queries} products the product database')
+    print(f"Retrieved {total_queries} products the product database")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+

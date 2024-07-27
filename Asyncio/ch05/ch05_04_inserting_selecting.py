@@ -1,7 +1,9 @@
 import asyncio
-from ch05_util import connect_pg
-from asyncpg import Record
 from typing import List
+
+from asyncpg import Record
+
+from util.db_handler import connect_pg
 
 
 async def main():
@@ -12,7 +14,7 @@ async def main():
     await connection.execute("INSERT INTO brand VALUES(DEFAULT, 'Seven')")
 
     # selecting
-    brand_query = 'SELECT brand_id, brand_name FROM brand'
+    brand_query = "SELECT brand_id, brand_name FROM brand"
     results: List[Record] = await connection.fetch(brand_query)
 
     for brand in results:

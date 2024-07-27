@@ -1,5 +1,6 @@
 import asyncio
-from util import delay, async_timed
+
+from util.async_timer import async_timed
 
 
 async def positive_integers_async(until: int):
@@ -13,6 +14,8 @@ async def main():
     async_generator = positive_integers_async(10)
     print(type(async_generator))
     async for number in async_generator:
-        print(f'Got number {number}')
+        print(f"Got number {number}")
+
 
 asyncio.run(main())
+

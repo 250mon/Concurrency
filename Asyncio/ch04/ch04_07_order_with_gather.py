@@ -1,5 +1,6 @@
 import asyncio
-from util import delay
+
+from util.delay_functions import delay
 
 """
 It is worth noting that the results for each awaitable we pass in may not complete in
@@ -8,8 +9,12 @@ order, b may complete before a. A nice feature of gather is that, regardless of 
 our awaitables complete, we are guaranteed the results will be returned in the order
 we passed them in
 """
+
+
 async def main():
     results = await asyncio.gather(delay(3), delay(1))
     print(results)
 
+
 asyncio.run(main())
+

@@ -1,15 +1,19 @@
-import asyncio, signal
+import asyncio
+import signal
 from asyncio import AbstractEventLoop
 from typing import Set
-from util import delay
+
+from util.delay_functions import delay
 
 # SIGINT does not work on Windows!!!!!
 
+
 def cancel_tasks():
-    print('Got a SIGINT!')
+    print("Got a SIGINT!")
     tasks: Set[asyncio.Task] = asyncio.all_tasks()
-    print(f'Cancelling {len(tasks)} tasks(s).')
+    print(f"Cancelling {len(tasks)} tasks(s).")
     [task.cancel() for task in tasks]
+
 
 async def main():
     loop: AbstractEventLoop = asyncio.get_running_loop()
@@ -19,5 +23,6 @@ async def main():
     loop.add_signal_handler(signal.SIGINT, cancel_tasks)
 
     await delay(10)
+
 
 asyncio.run(main())

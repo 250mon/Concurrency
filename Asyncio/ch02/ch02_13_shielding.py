@@ -1,6 +1,7 @@
 import asyncio
 from asyncio.exceptions import TimeoutError
-from util import delay
+
+from util.delay_functions import delay
 
 
 async def main():
@@ -14,4 +15,6 @@ async def main():
         result = await task
         print(result)
 
+
 asyncio.run(main())
+

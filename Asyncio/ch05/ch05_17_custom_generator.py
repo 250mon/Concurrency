@@ -1,5 +1,6 @@
 import asyncio
-from ch05_util import connect_pg
+
+from util.db_handler import connect_pg
 
 
 async def take(generator, to_take: int):
@@ -19,8 +20,10 @@ async def main():
         async for product in take(product_generator, 5):
             print(product)
 
-        print('Got the first five products!')
+        print("Got the first five products!")
 
     await connection.close()
 
+
 asyncio.run(main())
+

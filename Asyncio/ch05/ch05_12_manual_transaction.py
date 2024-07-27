@@ -1,9 +1,9 @@
 import asyncio
 
 import asyncpg
-
-from ch05_util import connect_pg
 from asyncpg.transaction import Transaction
+
+from util.db_handler import connect_pg
 
 
 async def main():
@@ -13,17 +13,15 @@ async def main():
     transaction: Transaction = connection.transaction()
     await transaction.start()
     try:
-        await connection.execute("INSERT INTO brand "
-                                 "VALUES(DEFAULT, 'brand_1')")
-        await connection.execute("INSERT INTO brand "
-                                 "VALUES(DEFAULT, 'brand_2')")
+        await connection.execute("INSERT INTO brand " "VALUES(DEFAULT, 'brand_1')")
+        await connection.execute("INSERT INTO brand " "VALUES(DEFAULT, 'brand_2')")
     except asyncpg.PostgresError:
         # if there was an exception, roll back
-        print('Errors, rolling back transaction!')
+        print("Errors, rolling back transaction!")
         await transaction.rollback()
     else:
         # if there was an exception, commit
-        print('No errors, committing transaction!')
+        print("No errors, committing transaction!")
         await transaction.commit()
 
     query = """SELECT brand_name FROM brand
@@ -32,5 +30,6 @@ async def main():
     print(brands)
 
     await connection.close()
+
 
 asyncio.run(main())

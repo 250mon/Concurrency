@@ -1,5 +1,6 @@
 import asyncio
-from util import delay
+
+from util.delay_functions import delay
 
 """
 Think of a coroutine like a regular Python function but with the superpower that it

@@ -1,7 +1,8 @@
 import asyncio
-from util import delay
 
-'''
+from util.delay_functions import delay
+
+"""
 'await'
 This keyword causes the coroutine following it to be run,
 unlike calling a coroutine directly, which produces a coroutine
@@ -21,7 +22,9 @@ asyncio.run shut down the event loop.
 
 Using await on our tasks in our application 
 also has implications for how exceptions are handled.
-'''
+"""
+
+
 async def main():
     # await
     sleep_for_three = asyncio.create_task(delay(3))
@@ -33,4 +36,6 @@ async def main():
     sleep_for_another_three = asyncio.create_task(delay(3))
     print(type(sleep_for_another_three))
 
+
 asyncio.run(main())
+

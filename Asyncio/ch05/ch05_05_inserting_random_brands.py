@@ -1,11 +1,12 @@
 import asyncio
-from ch05_util import connect_pg
-from typing import List, Tuple, Union
 from random import sample
+from typing import List, Tuple, Union
+
+from util.db_handler import connect_pg
 
 
 def load_common_words() -> List[str]:
-    with open('common_words.txt') as common_words:
+    with open("res/common_words.txt") as common_words:
         return [word.strip() for word in common_words.readlines()]
 
 
@@ -26,3 +27,4 @@ async def main():
 
 
 asyncio.run(main())
+

@@ -1,8 +1,8 @@
 import asyncio
-from ch05_util import connect_pg
 
-product_query = \
-    """
+from util.db_handler import connect_pg
+
+product_query = """
     SELECT
         p.product_id,
         p.product_name,
@@ -20,7 +20,7 @@ product_query = \
 
 async def main():
     connection = await connect_pg()
-    print('Creating the product database...')
+    print("Creating the product database...")
     queries = [connection.fetch(product_query)]
     # results is the list output from gather
     # connection.fetch(query) will produce a list of Record output
